@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Life Today</string>
     <string name="intro_screen_image">Introduction screen image</string>
+    <string name="appDescription">A journal application for your thoughts and feelings</string>
 </resources>
