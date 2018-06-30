@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.solo.lifetoday.R;
+import com.solo.lifetoday.Utils;
 
 import java.util.Date;
 
@@ -50,7 +51,7 @@ public class EntryDetailFragment extends Fragment {
 
         // Display date
         TextView createdOnTextView = fragmentView.findViewById(R.id.createdOnTextView);
-        createdOnTextView.setText(new Date().toString());
+        createdOnTextView.setText(Utils.getFormattedDateWithTime(new Date()));
 
         return fragmentView;
     }

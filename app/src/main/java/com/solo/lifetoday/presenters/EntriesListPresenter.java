@@ -1,5 +1,6 @@
 package com.solo.lifetoday.presenters;
 
+import com.solo.lifetoday.Utils;
 import com.solo.lifetoday.models.Entry;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class EntriesListPresenter {
         Entry entry = mEntries.get(position);
         view.setTitle(entry.getTitle());
         view.setContent(entry.getContent());
-        view.setLastUpdatedOn(entry.getLastUpdatedOn().toString());
+        view.setLastUpdatedOn(Utils.getFormattedDate(entry.getLastUpdatedOn()));
     }
 
     public int getEntriesCount() {
