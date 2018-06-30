@@ -26,6 +26,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.solo.lifetoday.R;
 import com.solo.lifetoday.presenters.SignInPresenter;
+import com.solo.lifetoday.views.Entries.EntryListActivity;
 
 /**
  * @author eddy.
@@ -150,6 +151,8 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
             Log.d(TAG, "signInWithCredential: success");
             // FirebaseUser user = mFirebaseAuth.getCurrentUser();
             // TODO Start the Journal List Activity
+            Intent entryListIntent = new Intent(requireActivity(), EntryListActivity.class);
+            startActivity(entryListIntent);
         } else {
             Log.w(TAG,
                     "Signin with credentials failed",

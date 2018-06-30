@@ -2,4 +2,7 @@
     <string name="app_name">Life Today</string>
     <string name="intro_screen_image">Introduction screen image</string>
     <string name="appDescription">A journal application for your thoughts and feelings</string>
+    <string name="continuation_symbol">...</string>
+    <string name="entry_icon_description">Entry icon</string>
+    <string name="last_update_on">Last updated on:</string>
 </resources>
