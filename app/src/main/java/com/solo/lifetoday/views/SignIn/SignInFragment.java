@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ProgressBar;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -55,7 +54,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
         mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), googleSignInOptions);
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        if(mFirebaseAuth.getCurrentUser() != null) {
+        if (mFirebaseAuth.getCurrentUser() != null) {
             openEntries();
         }
     }
@@ -96,9 +95,6 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
         SignInButton signInButton = mFragmentView.findViewById(R.id.googleSignInButton);
         signInButton.setOnClickListener((view) -> signIn());
 
-        Button signOutButton = mFragmentView.findViewById(R.id.googleSignOutButton);
-        signOutButton.setOnClickListener((view) -> signOut());
-
         mProgressBar = mFragmentView.findViewById(R.id.signInProgressBar);
     }
 
@@ -108,18 +104,6 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, GOOGLE_SIGN_IN_RETURN_CODE);
-    }
-
-    /**
-     * Sign out google account user
-     */
-    private void signOut() {
-        // Firebase sign out
-        mFirebaseAuth.signOut();
-
-        // Google sign out
-        mGoogleSignInClient.signOut().addOnCompleteListener(
-                task -> Log.i(TAG, "Signed out"));
     }
 
     /**
