@@ -1,5 +1,6 @@
 package com.solo.lifetoday.views.Entries;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,15 +9,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.solo.lifetoday.Constants;
 import com.solo.lifetoday.R;
 import com.solo.lifetoday.models.Entry;
 import com.solo.lifetoday.presenters.EntriesListPresenter;
+import com.solo.lifetoday.views.SignIn.SignInActivity;
 
 import java.util.ArrayList;
 
@@ -25,11 +35,13 @@ import java.util.ArrayList;
  */
 
 public class EntryListFragment extends Fragment {
+    private static final String TAG = EntryListFragment.class.getSimpleName();
     RecyclerView mEntriesRecyclerView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -47,14 +59,78 @@ public class EntryListFragment extends Fragment {
         ArrayList<Entry> entries = new ArrayList<>();
         entries.add(new Entry("Existence", "The property of being involved in the"
                 + "events in the universe"));
-        entries.add(new Entry("Death", "The process of losing the ability to"
-                + "interact with the reality assumed to be life"));
+        entries.add(new Entry("Existence", "The property of being involved in the"
+                + "events in the universe"));
+        entries.add(new Entry("Existence", "The property of being involved in the"
+                + "events in the universe"));
+        entries.add(new Entry("Existence", "The property of being involved in the"
+                + "events in the universe"));
+        entries.add(new Entry("Existence", "The property of being involved in the"
+                + "events in the universe"));
+        entries.add(new Entry("Existence", "The property of being involved in the"
+                + "events in the universe"));
+        entries.add(new Entry("Existence", "The property of being involved in the"
+                + "events in the universe"));
+        entries.add(new Entry("Existence", "The property of being involved in the"
+                + "events in the universe"));
 
         EntriesListPresenter entriesListPresenter = new EntriesListPresenter(entries);
 
         mEntriesRecyclerView.setAdapter(new EntriesAdapter(entriesListPresenter));
 
         return fragmentView;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.app_menu, menu);
+
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.menu_settings) {
+            Log.d(TAG, "Settings from Entry List");
+        } else if (item.getItemId() == R.id.menu_logout) {
+            Log.d(TAG, "Logout from app");
+            signOut();
+            openSignIn();
+        }
+
+        return true;
+    }
+
+    /**
+     * Sign out google account user
+     */
+    private void signOut() {
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+        // Firebase sign out
+        firebaseAuth.signOut();
+
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
+                GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(
+                requireContext(), googleSignInOptions);
+
+        // Google sign out
+        googleSignInClient.signOut().addOnCompleteListener(
+                task -> Log.i(TAG, "Signed out"));
+    }
+
+    /**
+     * Start the sign in activity and end current activity
+     */
+    private void openSignIn() {
+        Intent intent = new Intent(requireContext(), SignInActivity.class);
+        startActivity(intent);
+        requireActivity().finish();
     }
 
     /**
@@ -111,7 +187,7 @@ public class EntryListFragment extends Fragment {
             String subString;
             try {
                 subString = content.substring(0, Constants.ENTRY_ITEM_EXCERPT_SIZE - 1);
-            } catch(StringIndexOutOfBoundsException e) {
+            } catch (StringIndexOutOfBoundsException e) {
                 subString = content;
             }
             mContentTextView.setText(String.format("%s %s",

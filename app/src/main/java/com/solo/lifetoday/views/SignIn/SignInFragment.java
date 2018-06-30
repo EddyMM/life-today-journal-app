@@ -54,6 +54,10 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
 
         mGoogleSignInClient = GoogleSignIn.getClient(requireContext(), googleSignInOptions);
         mFirebaseAuth = FirebaseAuth.getInstance();
+
+        if(mFirebaseAuth.getCurrentUser() != null) {
+            openEntries();
+        }
     }
 
     @Nullable
@@ -149,10 +153,7 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
         if (task.isSuccessful()) {
             // Sign in success
             Log.d(TAG, "signInWithCredential: success");
-            // FirebaseUser user = mFirebaseAuth.getCurrentUser();
-            // TODO Start the Journal List Activity
-            Intent entryListIntent = new Intent(requireActivity(), EntryListActivity.class);
-            startActivity(entryListIntent);
+            openEntries();
         } else {
             Log.w(TAG,
                     "Signin with credentials failed",
@@ -163,6 +164,15 @@ public class SignInFragment extends Fragment implements SignInPresenter.View {
                     Snackbar.LENGTH_SHORT
             ).show();
         }
+    }
+
+    /**
+     * Starts the entries list activity
+     */
+    private void openEntries() {
+        Intent entryListIntent = new Intent(requireActivity(), EntryListActivity.class);
+        startActivity(entryListIntent);
+        requireActivity().finish();
     }
 
     @Override
