@@ -4,13 +4,16 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.solo.lifetoday.Constants;
 import com.solo.lifetoday.R;
 import com.solo.lifetoday.models.Entry;
 import com.solo.lifetoday.presenters.EntriesListPresenter;
@@ -34,6 +37,9 @@ public class EntryListFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
             @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.entry_list_fragment, container, false);
+
+        Toolbar appToolBar = fragmentView.findViewById(R.id.app_toolbar);
+        ((AppCompatActivity) requireActivity()).setSupportActionBar(appToolBar);
 
         mEntriesRecyclerView = fragmentView.findViewById(R.id.entriesRecyclerView);
         mEntriesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -102,8 +108,14 @@ public class EntryListFragment extends Fragment {
 
         @Override
         public void setContent(String content) {
+            String subString;
+            try {
+                subString = content.substring(0, Constants.ENTRY_ITEM_EXCERPT_SIZE - 1);
+            } catch(StringIndexOutOfBoundsException e) {
+                subString = content;
+            }
             mContentTextView.setText(String.format("%s %s",
-                    content,
+                    subString,
                     getString(R.string.continuation_symbol)));
         }
 
