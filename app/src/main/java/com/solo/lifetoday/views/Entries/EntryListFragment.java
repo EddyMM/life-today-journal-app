@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -56,6 +57,12 @@ public class EntryListFragment extends Fragment {
 
         mNoEntriesView = fragmentView.findViewById(R.id.noEntriesLayout);
 
+        FloatingActionButton addEntryFab = fragmentView.findViewById(R.id.addEntryFab);
+        addEntryFab.setOnClickListener(view -> {
+            Intent addEntryIntent = new Intent(requireContext(), EntryDetailActivity.class);
+            startActivity(addEntryIntent);
+        });
+
         mEntriesRecyclerView = fragmentView.findViewById(R.id.entriesRecyclerView);
         mEntriesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
@@ -93,9 +100,7 @@ public class EntryListFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.menu_settings) {
-            Log.d(TAG, "Settings from Entry List");
-        } else if (item.getItemId() == R.id.menu_logout) {
+        if (item.getItemId() == R.id.menu_logout) {
             Log.d(TAG, "Logout from app");
             signOut();
             openSignIn();

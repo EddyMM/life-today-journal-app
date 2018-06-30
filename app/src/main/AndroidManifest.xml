@@ -21,6 +21,14 @@
 
         <activity android:name=".views.Entries.EntryListActivity"
             android:launchMode="singleTop" />
+
+        <activity android:name=".views.Entries.EntryDetailActivity"
+            android:label="@string/entry_activity_label"
+            android:parentActivityName=".views.Entries.EntryListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".views.Entries.EntryListActivity" />
+        </activity>
     </application>
 
 </manifest>

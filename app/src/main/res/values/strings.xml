@@ -9,4 +9,15 @@
     <string name="logout">Logout</string>
     <string name="no_entries_description">No entries description</string>
     <string name="no_entries_message">No entries available\nAdd an entry</string>
+    <string name="entryTitleHint">Enter title of entry</string>
+    <string name="entryContentHint">Enter your thoughts and feelings here ...</string>
+    <string name="titleTextView">Title</string>
+    <string name="contentTextView">Details</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_save_description">Save option</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">Delete</string>
+    <string name="menu_share_description">Share description</string>
+    <string name="menu_delete_description">Delete description</string>
+    <string name="entry_activity_label">Entry</string>
 </resources>
