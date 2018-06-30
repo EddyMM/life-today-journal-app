@@ -11,9 +11,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.solo.lifetoday.Constants;
 import com.solo.lifetoday.R;
 import com.solo.lifetoday.models.Entry;
+import com.solo.lifetoday.presenters.EntriesListPresenter;
 
 import java.util.ArrayList;
 
@@ -36,13 +36,17 @@ public class EntryListFragment extends Fragment {
         View fragmentView = inflater.inflate(R.layout.entry_list_fragment, container, false);
 
         mEntriesRecyclerView = fragmentView.findViewById(R.id.entriesRecyclerView);
+        mEntriesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+
         ArrayList<Entry> entries = new ArrayList<>();
         entries.add(new Entry("Existence", "The property of being involved in the"
                 + "events in the universe"));
         entries.add(new Entry("Death", "The process of losing the ability to"
                 + "interact with the reality assumed to be life"));
-        mEntriesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
-        mEntriesRecyclerView.setAdapter(new EntriesAdapter(entries));
+
+        EntriesListPresenter entriesListPresenter = new EntriesListPresenter(entries);
+
+        mEntriesRecyclerView.setAdapter(new EntriesAdapter(entriesListPresenter));
 
         return fragmentView;
     }
@@ -51,10 +55,10 @@ public class EntryListFragment extends Fragment {
      * Adapter to provide the entries
      */
     private class EntriesAdapter extends RecyclerView.Adapter<EntryViewHolder> {
-        private ArrayList<Entry> mEntries;
+        private EntriesListPresenter mEntriesListPresenter;
 
-        EntriesAdapter(ArrayList<Entry> entries) {
-            mEntries = entries;
+        EntriesAdapter(EntriesListPresenter entriesListPresenter) {
+            mEntriesListPresenter = entriesListPresenter;
         }
 
         @NonNull
@@ -68,19 +72,20 @@ public class EntryListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
-            holder.bind(mEntries.get(position));
+            mEntriesListPresenter.onBindEntry(position, holder);
         }
 
         @Override
         public int getItemCount() {
-            return mEntries.size();
+            return mEntriesListPresenter.getEntriesCount();
         }
     }
 
     /**
      * ViewHolder for an entry in the journal
      */
-    private class EntryViewHolder extends RecyclerView.ViewHolder {
+    private class EntryViewHolder extends RecyclerView.ViewHolder implements
+            EntriesListPresenter.View {
         private TextView mTitleTextView, mContentTextView, mLastUpdatedOnTextView;
 
         EntryViewHolder(View itemView) {
@@ -90,14 +95,23 @@ public class EntryListFragment extends Fragment {
             mLastUpdatedOnTextView = itemView.findViewById(R.id.lastUpdatedOnTextView);
         }
 
-        void bind(Entry entry) {
-            mTitleTextView.setText(entry.getTitle());
+        @Override
+        public void setTitle(String title) {
+            mTitleTextView.setText(title);
+        }
+
+        @Override
+        public void setContent(String content) {
             mContentTextView.setText(String.format("%s %s",
-                    entry.getContent().substring(0, Constants.ENTRY_ITEM_EXCERPT_SIZE-1),
+                    content,
                     getString(R.string.continuation_symbol)));
+        }
+
+        @Override
+        public void setLastUpdatedOn(String date) {
             mLastUpdatedOnTextView.setText(String.format("%s %s",
                     getString(R.string.last_update_on),
-                    entry.getLastUpdatedOn().toString()));
+                    date));
         }
     }
 }
