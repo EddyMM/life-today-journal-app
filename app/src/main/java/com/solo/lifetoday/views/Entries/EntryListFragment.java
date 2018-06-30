@@ -37,6 +37,7 @@ import java.util.ArrayList;
 public class EntryListFragment extends Fragment {
     private static final String TAG = EntryListFragment.class.getSimpleName();
     RecyclerView mEntriesRecyclerView;
+    private View mNoEntriesView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +53,8 @@ public class EntryListFragment extends Fragment {
 
         Toolbar appToolBar = fragmentView.findViewById(R.id.app_toolbar);
         ((AppCompatActivity) requireActivity()).setSupportActionBar(appToolBar);
+
+        mNoEntriesView = fragmentView.findViewById(R.id.noEntriesLayout);
 
         mEntriesRecyclerView = fragmentView.findViewById(R.id.entriesRecyclerView);
         mEntriesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
@@ -159,6 +162,15 @@ public class EntryListFragment extends Fragment {
 
         @Override
         public int getItemCount() {
+            int noOfEntries = mEntriesListPresenter.getEntriesCount();
+            if(noOfEntries <= 0) {
+                mEntriesRecyclerView.setVisibility(View.INVISIBLE);
+                mNoEntriesView.setVisibility(View.VISIBLE);
+            } else {
+                mEntriesRecyclerView.setVisibility(View.VISIBLE);
+                mNoEntriesView.setVisibility(View.INVISIBLE);
+            }
+
             return mEntriesListPresenter.getEntriesCount();
         }
     }

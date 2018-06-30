@@ -7,4 +7,6 @@
     <string name="last_update_on">Last updated on:</string>
     <string name="settings">Settings</string>
     <string name="logout">Logout</string>
+    <string name="no_entries_description">No entries description</string>
+    <string name="no_entries_message">No entries available\nAdd an entry</string>
 </resources>
