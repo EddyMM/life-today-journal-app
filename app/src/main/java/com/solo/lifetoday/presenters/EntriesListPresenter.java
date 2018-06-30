@@ -1,35 +1,58 @@
 package com.solo.lifetoday.presenters;
 
+import com.google.firebase.database.DataSnapshot;
 import com.solo.lifetoday.Utils;
 import com.solo.lifetoday.models.Entry;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author eddy.
  */
 
 public class EntriesListPresenter {
-    private ArrayList<Entry> mEntries;
+    // private static final String TAG = EntriesListPresenter.class.getSimpleName();
+    private List<DataSnapshot> mEntries;
+    private EntriesView mView;
 
-    public EntriesListPresenter(ArrayList<Entry> entries) {
+    public EntriesListPresenter(List<DataSnapshot> entries, EntriesView view) {
         mEntries = entries;
+        mView = view;
     }
 
-    public void onBindEntry(int position, EntriesListPresenter.View view) {
-        Entry entry = mEntries.get(position);
+    public void onBindEntry(int position, ViewHolderView view) {
+        Entry entry = mEntries.get(position).getValue(Entry.class);
         view.setTitle(entry.getTitle());
         view.setContent(entry.getContent());
         view.setLastUpdatedOn(Utils.getFormattedDate(entry.getLastUpdatedOn()));
     }
 
     public int getEntriesCount() {
-        return mEntries.size();
+        int noOfEntries = mEntries.size();
+        if (noOfEntries <= 0) {
+            mView.showNoEntries();
+        } else {
+            mView.showEntries();
+        }
+
+        return noOfEntries;
     }
 
-    public interface View {
+    public List<DataSnapshot> getEntries() {
+        return mEntries;
+    }
+
+    public interface ViewHolderView {
         void setTitle(String title);
+
         void setContent(String content);
+
         void setLastUpdatedOn(String date);
+    }
+
+    public interface EntriesView {
+        void showNoEntries();
+
+        void showEntries();
     }
 }

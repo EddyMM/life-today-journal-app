@@ -9,6 +9,8 @@ import com.solo.lifetoday.views.SingleFragmentActivity;
  */
 
 public class EntryDetailActivity extends SingleFragmentActivity {
+    public static final String ENTRY_ID_EXTRA = "entry_id";
+
     @Override
     protected Fragment createFragment() {
         return new EntryDetailFragment();

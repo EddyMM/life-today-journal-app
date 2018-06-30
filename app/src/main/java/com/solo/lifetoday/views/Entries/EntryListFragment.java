@@ -1,5 +1,7 @@
 package com.solo.lifetoday.views.Entries;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -17,25 +19,26 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.solo.lifetoday.Constants;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.FirebaseDatabase;
+import com.solo.lifetoday.EntriesViewModel;
 import com.solo.lifetoday.R;
-import com.solo.lifetoday.models.Entry;
+import com.solo.lifetoday.Utils;
 import com.solo.lifetoday.presenters.EntriesListPresenter;
 import com.solo.lifetoday.views.SignIn.SignInActivity;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author eddy.
  */
 
-public class EntryListFragment extends Fragment {
+public class EntryListFragment extends Fragment implements EntriesListPresenter.EntriesView {
     private static final String TAG = EntryListFragment.class.getSimpleName();
     RecyclerView mEntriesRecyclerView;
     private View mNoEntriesView;
@@ -44,6 +47,9 @@ public class EntryListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        // Ensure offline mode is supported
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     @Nullable
@@ -66,27 +72,25 @@ public class EntryListFragment extends Fragment {
         mEntriesRecyclerView = fragmentView.findViewById(R.id.entriesRecyclerView);
         mEntriesRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry("Existence", "The property of being involved in the"
-                + "events in the universe"));
-        entries.add(new Entry("Existence", "The property of being involved in the"
-                + "events in the universe"));
-        entries.add(new Entry("Existence", "The property of being involved in the"
-                + "events in the universe"));
-        entries.add(new Entry("Existence", "The property of being involved in the"
-                + "events in the universe"));
-        entries.add(new Entry("Existence", "The property of being involved in the"
-                + "events in the universe"));
-        entries.add(new Entry("Existence", "The property of being involved in the"
-                + "events in the universe"));
-        entries.add(new Entry("Existence", "The property of being involved in the"
-                + "events in the universe"));
-        entries.add(new Entry("Existence", "The property of being involved in the"
-                + "events in the universe"));
+        EntriesViewModel entriesViewModel = ViewModelProviders.of(this)
+                .get(EntriesViewModel.class);
 
-        EntriesListPresenter entriesListPresenter = new EntriesListPresenter(entries);
+        LiveData<DataSnapshot> entriesLiveData = entriesViewModel.getDataSnapshotLiveData();
+        entriesLiveData.observe(requireActivity(), dataSnapshot -> {
+            if (dataSnapshot != null) {
+                Log.d(TAG, String.format("Entries snapshot(%d): %s",
+                        dataSnapshot.getChildrenCount(),
+                        dataSnapshot));
+                List<DataSnapshot> entries = Utils.toList(dataSnapshot.getChildren());
+                EntriesListPresenter entriesListPresenter = new EntriesListPresenter(
+                        entries, this);
 
-        mEntriesRecyclerView.setAdapter(new EntriesAdapter(entriesListPresenter));
+                mEntriesRecyclerView.setAdapter(new EntriesAdapter(
+                        getContext(), entriesListPresenter));
+            } else {
+                Log.d(TAG, "Snapshot is null");
+            }
+        });
 
         return fragmentView;
     }
@@ -141,82 +145,15 @@ public class EntryListFragment extends Fragment {
         requireActivity().finish();
     }
 
-    /**
-     * Adapter to provide the entries
-     */
-    private class EntriesAdapter extends RecyclerView.Adapter<EntryViewHolder> {
-        private EntriesListPresenter mEntriesListPresenter;
-
-        EntriesAdapter(EntriesListPresenter entriesListPresenter) {
-            mEntriesListPresenter = entriesListPresenter;
-        }
-
-        @NonNull
-        @Override
-        public EntryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View entryView = LayoutInflater.from(requireContext())
-                    .inflate(R.layout.entry_view, parent, false);
-
-            return new EntryViewHolder(entryView);
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull EntryViewHolder holder, int position) {
-            mEntriesListPresenter.onBindEntry(position, holder);
-        }
-
-        @Override
-        public int getItemCount() {
-            int noOfEntries = mEntriesListPresenter.getEntriesCount();
-            if(noOfEntries <= 0) {
-                mEntriesRecyclerView.setVisibility(View.INVISIBLE);
-                mNoEntriesView.setVisibility(View.VISIBLE);
-            } else {
-                mEntriesRecyclerView.setVisibility(View.VISIBLE);
-                mNoEntriesView.setVisibility(View.INVISIBLE);
-            }
-
-            return mEntriesListPresenter.getEntriesCount();
-        }
+    @Override
+    public void showNoEntries() {
+        mEntriesRecyclerView.setVisibility(android.view.View.INVISIBLE);
+        mNoEntriesView.setVisibility(android.view.View.VISIBLE);
     }
 
-    /**
-     * ViewHolder for an entry in the journal
-     */
-    private class EntryViewHolder extends RecyclerView.ViewHolder implements
-            EntriesListPresenter.View {
-        private TextView mTitleTextView, mContentTextView, mLastUpdatedOnTextView;
-
-        EntryViewHolder(View itemView) {
-            super(itemView);
-            mTitleTextView = itemView.findViewById(R.id.titleTextView);
-            mContentTextView = itemView.findViewById(R.id.contentTextView);
-            mLastUpdatedOnTextView = itemView.findViewById(R.id.lastUpdatedOnTextView);
-        }
-
-        @Override
-        public void setTitle(String title) {
-            mTitleTextView.setText(title);
-        }
-
-        @Override
-        public void setContent(String content) {
-            String subString;
-            try {
-                subString = content.substring(0, Constants.ENTRY_ITEM_EXCERPT_SIZE - 1);
-            } catch (StringIndexOutOfBoundsException e) {
-                subString = content;
-            }
-            mContentTextView.setText(String.format("%s %s",
-                    subString,
-                    getString(R.string.continuation_symbol)));
-        }
-
-        @Override
-        public void setLastUpdatedOn(String date) {
-            mLastUpdatedOnTextView.setText(String.format("%s %s",
-                    getString(R.string.last_update_on),
-                    date));
-        }
+    @Override
+    public void showEntries() {
+        mEntriesRecyclerView.setVisibility(android.view.View.VISIBLE);
+        mNoEntriesView.setVisibility(android.view.View.INVISIBLE);
     }
 }

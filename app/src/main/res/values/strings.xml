@@ -20,4 +20,6 @@
     <string name="menu_share_description">Share description</string>
     <string name="menu_delete_description">Delete description</string>
     <string name="entry_activity_label">Entry</string>
+    <string name="title_empty">Enter title</string>
+    <string name="content_empty">Enter thoughts</string>
 </resources>

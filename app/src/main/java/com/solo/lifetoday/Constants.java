@@ -6,4 +6,5 @@ package com.solo.lifetoday;
 
 public class Constants {
     public static final int ENTRY_ITEM_EXCERPT_SIZE = 60;
+    public static final String JOURNAL_DB_REF = "journal";
 }
