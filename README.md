@@ -3,45 +3,50 @@
 A journal application where in users can pen down their thoughts and
 feelings
 
+<img src="githubResources/signin.png" alt="signin" width=250 height=450 /> <img src="githubResources/empty_entries.png" alt="empty entries" width=250 height=450 />
+<img src="githubResources/add_entry.png" alt="add entry" width=250 height=450 />
+<img src="githubResources/filled_entry.png" alt="filled entry" width=250 height=450 />
+<img src="githubResources/view_entry.png" alt="view entry" width=250 height=450 />
+
+
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+To run this project, do the following:
+
+1. Clone the project
+2. Open the project from `Android Studio`
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+- Android Studio IDE
+- Gradle
 
-```
-Give examples
-```
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running
-
-Say what the step will be
+- Clone the project
 
 ```
-Give the example
+git clone https://github.com/EddyMM/life-today-journal-app.git
 ```
 
-And repeat
+- Open project using `Android Studio`
+- Sync with gradle files to get the necessary dependencies
+- Run the project using emulator or connected Android Device
 
-```
-until finished
-```
 
-End with an example of getting some data out of the system or using it for a little demo
 
 ## Running the tests
 
-Explain how to run the automated tests for this system
-
+- From Android Studio Edit `Run Configurations` and add an Instrumented Test for the `app` module
+- Once Tests have loaded, Click on `Run`
 
 ## Built With
 
-* [Maven](https://maven.apache.org/) - Dependency Management
-
+- Android SDK
+- Gradle - Dependency Management
+- FirebaseAuth - User Authentication
+- FirebaseDatabase - Data persistence
 
 ## Contributing
 
@@ -53,7 +58,7 @@ We use [SemVer](http://semver.org/) for versioning. For the versions available, 
 
 ## Authors
 
-* **Eddy Mwenda Mwiti** - *Initial work* - [EddyMM](https://github.com/EddyMM)
+* **Eddy Mwenda Mwiti**  - [EddyMM](https://github.com/EddyMM)
 
 ## License
 
