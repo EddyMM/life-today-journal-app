@@ -89,9 +89,7 @@ public class EntriesAdapter extends RecyclerView.Adapter<EntriesAdapter.EntryVie
 
         @Override
         public void setLastUpdatedOn(String date) {
-            mLastUpdatedOnTextView.setText(String.format("%s %s",
-                    mContext.getString(R.string.last_update_on),
-                    date));
+            mLastUpdatedOnTextView.setText(date);
         }
     }
 }

@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
+import android.support.v4.app.ShareCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +33,7 @@ import com.solo.lifetoday.Utils;
 import com.solo.lifetoday.models.Entry;
 
 import java.util.Date;
+import java.util.HashMap;
 
 /**
  * @author eddy.
@@ -87,11 +89,11 @@ public class EntryDetailFragment extends Fragment {
                 Log.d(TAG, "Save entry");
                 // Ensure entry was typed
                 if (TextUtils.isEmpty(mTitleEditText.getText().toString())) {
-                    mTitleEditText.setError(getString(R.string.title_empty));
+                    mTitleEditText.setError(requireActivity().getString(R.string.title_empty));
                     break;
                 }
                 if (TextUtils.isEmpty(mContentEditText.getText().toString())) {
-                    mContentEditText.setError(getString(R.string.content_empty));
+                    mContentEditText.setError(requireActivity().getString(R.string.content_empty));
                     break;
                 }
 
@@ -99,6 +101,17 @@ public class EntryDetailFragment extends Fragment {
                 break;
             case R.id.menu_share:
                 Log.d(TAG, "Share entry");
+                // Ensure entry was typed
+                if (TextUtils.isEmpty(mTitleEditText.getText().toString())) {
+                    mTitleEditText.setError(requireActivity().getString(R.string.title_empty));
+                    break;
+                }
+                if (TextUtils.isEmpty(mContentEditText.getText().toString())) {
+                    mContentEditText.setError(requireActivity().getString(R.string.content_empty));
+                    break;
+                }
+                shareEntry(mTitleEditText.getText().toString(),
+                        mContentEditText.getText().toString());
                 break;
             case R.id.menu_delete:
                 Log.d(TAG, "Delete entry");
@@ -140,26 +153,45 @@ public class EntryDetailFragment extends Fragment {
             Entry entry;
 
             if (!TextUtils.isEmpty(mEntryKey)) {
-                entry = new Entry(mEntryKey, title, content);
+                HashMap<String, Object> result = new HashMap<>();
+                result.put("title", title);
+                result.put("content", content);
+                result.put("lastUpdatedOn", new Date());
+
+                databaseReference.child(mEntryKey).updateChildren(result);
+                // entry = new Entry(mEntryKey, title, content);
                 // Update last update time
-                entry.setLastUpdatedOn((new Date()));
+                // entry.setLastUpdatedOn((new Date()));
             } else {
                 entry = new Entry(databaseReference.push().getKey(), title, content);
                 entry.setCreatedOn(new Date());
+                databaseReference.child(entry.getKey()).setValue(entry);
             }
 
-            databaseReference.child(entry.getKey()).setValue(entry);
-
-            Snackbar.make(mFragmentView,
+            Toast.makeText(requireContext(),
                     "Saved",
-                    Snackbar.LENGTH_SHORT)
+                    Toast.LENGTH_SHORT)
                     .show();
         } catch (Exception e) {
-            Snackbar.make(mFragmentView,
+            Toast.makeText(requireContext(),
                     "Error while saving",
-                    Snackbar.LENGTH_SHORT)
+                    Toast.LENGTH_SHORT)
                     .show();
         }
+    }
+
+    private void shareEntry(String title, String content) {
+        String mimeType = "text/plain";
+
+        String chooserTitle = "Share entry";
+
+        ShareCompat.IntentBuilder
+                /* The from method specifies the Context from which this share is coming from */
+                .from(requireActivity())
+                .setType(mimeType)
+                .setChooserTitle(chooserTitle)
+                .setText(String.format("%s:\n\n%s", title, content))
+                .startChooser();
     }
 
     private void deleteEntry() {
@@ -175,9 +207,9 @@ public class EntryDetailFragment extends Fragment {
                 requireActivity().finish();
             }
         } catch (Exception e) {
-            Snackbar.make(mFragmentView,
-                    "Error while saving",
-                    Snackbar.LENGTH_SHORT)
+            Toast.makeText(requireContext(),
+                    "Error while deleting",
+                    Toast.LENGTH_SHORT)
                     .show();
         }
     }
@@ -196,9 +228,13 @@ public class EntryDetailFragment extends Fragment {
                     mTitleEditText.setText(entry.getTitle());
                     mContentEditText.setText(entry.getContent());
                     mLastUpdatedOn.setText(
-                            Utils.getFormattedDateWithTime(entry.getLastUpdatedOn()));
+                            String.format("%s: %s",
+                                requireActivity().getString(R.string.last_update_on),
+                                Utils.getFormattedDateWithTime(entry.getLastUpdatedOn())));
                     mCreatedOnTextView.setText(
-                            Utils.getFormattedDateWithTime(entry.getCreatedOn()));
+                            String.format("%s: %s",
+                                requireActivity().getString(R.string.created_on),
+                                Utils.getFormattedDateWithTime(entry.getCreatedOn())));
                 } else {
                     Log.w(TAG, "Could not fetch entry with key: " + key);
                 }

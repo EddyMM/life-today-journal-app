@@ -16,7 +16,7 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/entriesRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_below="@id/app_toolbar" />
@@ -28,7 +28,7 @@
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/entriesRecyclerView">
+        android:layout_below="@id/app_toolbar">
 
         <ImageView
             android:id="@+id/noEntriesImageView"

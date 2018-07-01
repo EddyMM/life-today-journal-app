@@ -1,5 +1,7 @@
 package com.solo.lifetoday.presenters;
 
+import android.util.Log;
+
 import com.google.firebase.database.DataSnapshot;
 import com.solo.lifetoday.Utils;
 import com.solo.lifetoday.models.Entry;
@@ -11,7 +13,7 @@ import java.util.List;
  */
 
 public class EntriesListPresenter {
-    // private static final String TAG = EntriesListPresenter.class.getSimpleName();
+    private static final String TAG = EntriesListPresenter.class.getSimpleName();
     private List<DataSnapshot> mEntries;
     private EntriesView mView;
 
@@ -22,9 +24,13 @@ public class EntriesListPresenter {
 
     public void onBindEntry(int position, ViewHolderView view) {
         Entry entry = mEntries.get(position).getValue(Entry.class);
-        view.setTitle(entry.getTitle());
-        view.setContent(entry.getContent());
-        view.setLastUpdatedOn(Utils.getFormattedDate(entry.getLastUpdatedOn()));
+        if(entry != null) {
+            view.setTitle(entry.getTitle());
+            view.setContent(entry.getContent());
+            view.setLastUpdatedOn(Utils.getFormattedDateWithTime(entry.getLastUpdatedOn()));
+        } else {
+            Log.w(TAG, "Could not find entry at position: " + position);
+        }
     }
 
     public int getEntriesCount() {

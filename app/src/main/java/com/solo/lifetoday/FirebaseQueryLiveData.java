@@ -25,7 +25,7 @@ public class FirebaseQueryLiveData extends LiveData<DataSnapshot> {
     }
 
     public FirebaseQueryLiveData(DatabaseReference ref) {
-        this.query = ref;
+        this.query = ref.orderByChild("lastUpdatedOn");
     }
 
     @Override

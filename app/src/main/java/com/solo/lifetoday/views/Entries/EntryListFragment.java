@@ -25,13 +25,13 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.FirebaseDatabase;
 import com.solo.lifetoday.EntriesViewModel;
 import com.solo.lifetoday.R;
 import com.solo.lifetoday.Utils;
 import com.solo.lifetoday.presenters.EntriesListPresenter;
 import com.solo.lifetoday.views.SignIn.SignInActivity;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -79,6 +79,7 @@ public class EntryListFragment extends Fragment implements EntriesListPresenter.
                         dataSnapshot.getChildrenCount(),
                         dataSnapshot));
                 List<DataSnapshot> entries = Utils.toList(dataSnapshot.getChildren());
+
                 EntriesListPresenter entriesListPresenter = new EntriesListPresenter(
                         entries, this);
 
@@ -121,7 +122,7 @@ public class EntryListFragment extends Fragment implements EntriesListPresenter.
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(
                 GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken(requireActivity().getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
