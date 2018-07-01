@@ -47,9 +47,6 @@ public class EntryListFragment extends Fragment implements EntriesListPresenter.
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-
-        // Ensure offline mode is supported
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
     }
 
     @Nullable

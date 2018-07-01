@@ -23,6 +23,7 @@ import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.database.FirebaseDatabase;
 import com.solo.lifetoday.R;
 import com.solo.lifetoday.presenters.SignInPresenter;
 import com.solo.lifetoday.views.Entries.EntryListActivity;
