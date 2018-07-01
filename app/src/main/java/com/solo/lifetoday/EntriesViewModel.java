@@ -14,7 +14,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class EntriesViewModel extends ViewModel {
     private static final DatabaseReference JOURNAL_REF =
-            FirebaseDatabase.getInstance().getReference("/journal");
+            FirebaseDatabase.getInstance().getReference(Constants.JOURNAL_DB_REF);
 
     private final FirebaseQueryLiveData liveData = new FirebaseQueryLiveData(JOURNAL_REF);
 
