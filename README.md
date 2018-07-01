@@ -3,8 +3,7 @@
 A journal application where in users can pen down their thoughts and
 feelings
 
-<img src="githubResources/signin.png" alt="signin" width=250 height=450 />
-<img src="githubResources/empty_entries.png" alt="empty entries" width=250 height=450 />
+<img src="githubResources/signin.png" alt="signin" width=250 height=450 /> <img src="githubResources/empty_entries.png" alt="empty entries" width=250 height=450 />
 <img src="githubResources/add_entry.png" alt="add entry" width=250 height=450 />
 <img src="githubResources/filled_entry.png" alt="filled entry" width=250 height=450 />
 <img src="githubResources/view_entry.png" alt="view entry" width=250 height=450 />
