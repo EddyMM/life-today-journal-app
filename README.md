@@ -16,7 +16,7 @@ To run this project, do the following:
 1. Clone the project
 2. Open the project from `Android Studio`
 
-APK can be found here [Life Today Journal App APK](https://github.com/EddyMM/life-today-journal-app/releases/download/1.0.0/life-today.apk)
+Get the latest APK release (here)[Life Today Journal App APK](https://github.com/EddyMM/life-today-journal-app/releases)
 
 ### Prerequisites
 
