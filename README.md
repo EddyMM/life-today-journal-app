@@ -3,11 +3,15 @@
 A journal application where in users can pen down their thoughts and
 feelings
 
-![SignIn](githubResources/signin.png) ... ![Empty Entries](githubResources/empty_entries.png)
+<img src="githubResources/signin.png" width=250 height=450 />
 
-![Add Entry](githubResources/add_entry.png) ... ![Filled Entry](githubResources/filled_entry.png)
+<img src="githubResources/empty_entries.png" width=250 height=450 />
 
-![View Entry](githubResources/view_entry.png)
+<img src="githubResources/add_entry.png" width=250 height=450 />
+
+<img src="githubResources/filled_entry.png" width=250 height=450 />
+
+<img src="githubResources/view_entry.png" width=250 height=450 />
 
 
 ## Getting Started
